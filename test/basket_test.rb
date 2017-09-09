@@ -48,10 +48,22 @@ class BasketTest < Minitest::Test
     basket.add_item_to_inventory(milk)
     basket.add_item_to_inventory(apples)
     
-    # binding.pry
-    basket.add_up_count_of_items
+    basket.add_up_items
 
     assert_equal 4, basket.item_count
     assert_equal ({"AP1"=>{:name=>"Apples", :price=>6.0, :quantity=>2}, "CH1"=>{:name=>"Chai", :price=>3.11, :quantity=>1}, "MK1"=>{:name=>"Milk", :price=>4.75, :quantity=>1}}), basket.sheet
+  end
+
+  def test_it_adds_the_total_of_the_basket
+    apples = Apples.new
+    milk = Milk.new
+    basket = Basket.new
+
+    basket.add_item_to_inventory(apples)
+    basket.add_item_to_inventory(milk)
+
+    basket.get_total_price
+    
+    assert_equal 10.75, basket.total_price
   end
 end
