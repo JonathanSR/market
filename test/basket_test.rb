@@ -31,10 +31,10 @@ class BasketTest < Minitest::Test
     apples = Apples.new
     basket = Basket.new
 
-    basket.add_item_to_inventory(apples, 1)
+    basket.add_item_to_inventory(apples)
 
     assert_equal 1, basket.sheet.count
-    assert_equal ({"AP1"=>1}), basket.sheet
+    assert_equal ({"AP1"=>{:name=>"Apples", :price=>6.0, :quantity=>1}}), basket.sheet
   end
 
   def test_it_adds_multiple_items_to_the_basket
@@ -43,15 +43,15 @@ class BasketTest < Minitest::Test
     milk = Milk.new
     basket = Basket.new
 
-    basket.add_item_to_inventory(apples, 1)
-    basket.add_item_to_inventory(chai, 1)
-    basket.add_item_to_inventory(milk, 1)
-    basket.add_item_to_inventory(apples, 2)
+    basket.add_item_to_inventory(apples)
+    basket.add_item_to_inventory(chai)
+    basket.add_item_to_inventory(milk)
+    basket.add_item_to_inventory(apples)
     
     # binding.pry
     basket.add_up_count_of_items
 
-    assert_equal 5, basket.item_count
-    assert_equal ({"AP1"=>3, "CH1"=>1, "MK1"=>1}), basket.sheet
+    assert_equal 4, basket.item_count
+    assert_equal ({"AP1"=>{:name=>"Apples", :price=>6.0, :quantity=>2}, "CH1"=>{:name=>"Chai", :price=>3.11, :quantity=>1}, "MK1"=>{:name=>"Milk", :price=>4.75, :quantity=>1}}), basket.sheet
   end
 end
