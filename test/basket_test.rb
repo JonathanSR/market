@@ -1,6 +1,11 @@
 require 'minitest/autorun'
 require 'minitest/pride'
 require './lib/basket'
+require_relative '../lib/apples'
+require_relative '../lib/chai'
+require_relative '../lib/coffee'
+require_relative '../lib/milk'
+
 require 'pry'
 
 class BasketTest < Minitest::Test 
@@ -14,5 +19,39 @@ class BasketTest < Minitest::Test
     basket = Basket.new
 
     assert_equal Hash, basket.sheet.class
+  end
+
+  def test_the_basket_is_empty
+    basket = Basket.new
+
+    assert basket.sheet.empty?
+  end
+
+  def test_it_adds_an_item_to_the_basket
+    apples = Apples.new
+    basket = Basket.new
+
+    basket.add_item_to_inventory(apples, 1)
+
+    assert_equal 1, basket.sheet.count
+    assert_equal ({"AP1"=>1}), basket.sheet
+  end
+
+  def test_it_adds_multiple_items_to_the_basket
+    apples = Apples.new
+    chai = Chai.new
+    milk = Milk.new
+    basket = Basket.new
+
+    basket.add_item_to_inventory(apples, 1)
+    basket.add_item_to_inventory(chai, 1)
+    basket.add_item_to_inventory(milk, 1)
+    basket.add_item_to_inventory(apples, 2)
+    
+    # binding.pry
+    basket.add_up_count_of_items
+
+    assert_equal 5, basket.item_count
+    assert_equal ({"AP1"=>3, "CH1"=>1, "MK1"=>1}), basket.sheet
   end
 end
