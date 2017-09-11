@@ -6,6 +6,7 @@ require_relative '../lib/chai'
 require_relative '../lib/coffee'
 require_relative '../lib/milk'
 require_relative '../lib/basket'
+require 'pry'
 
 class RegisterTest < Minitest::Test 
   def test_it_creates_an_instance_of_register
@@ -47,7 +48,7 @@ class RegisterTest < Minitest::Test
     register.basket.add_item_to_inventory(chai)
     register.checks_for_chai_discounts
 
-    assert_equal ({"CH1"=>{:name=>"Chai", :price=>3.11, :quantity=>1}, "MK1"=>{:name=>"Milk", :price=>4.75, :quantity=>1, :APPL=>-4.5}}), register.basket.sheet
+    assert_equal ({"CH1"=>{:name=>"Chai", :price=>3.11, :quantity=>1}, "MK1"=>{:name=>"Milk", :price=>4.75, :quantity=>1, :CHMK=>-4.5}}), register.basket.sheet
   end
 
   def test_it_applies_chai_milk_discount_only_once
@@ -57,10 +58,21 @@ class RegisterTest < Minitest::Test
     register.basket.add_item_to_inventory(chai)
     register.checks_for_chai_discounts
 
-    assert_equal ({"CH1"=>{:name=>"Chai", :price=>3.11, :quantity=>1}, "MK1"=>{:name=>"Milk", :price=>4.75, :quantity=>1, :APPL=>-4.5}}), register.basket.sheet
+    assert_equal ({"CH1"=>{:name=>"Chai", :price=>3.11, :quantity=>1}, "MK1"=>{:name=>"Milk", :price=>4.75, :quantity=>1, :CHMK=>-4.5}}), register.basket.sheet
 
     register.basket.add_item_to_inventory(chai)
 
-    assert_equal ({"CH1"=>{:name=>"Chai", :price=>3.11, :quantity=>2}, "MK1"=>{:name=>"Milk", :price=>4.75, :quantity=>1, :APPL=>-4.5}}), register.basket.sheet
+    assert_equal ({"CH1"=>{:name=>"Chai", :price=>3.11, :quantity=>2}, "MK1"=>{:name=>"Milk", :price=>4.75, :quantity=>1, :CHMK=>-4.5}}), register.basket.sheet
+  end
+
+  def test_it_checks_and_applies_coffee_discount
+    register = Register.new
+    coffee = Coffee.new
+
+    register.basket.add_item_to_inventory(coffee)
+
+    register.checks_for_coffee_discount
+
+    assert_equal ({"CF1"=>{:name=>"Coffee", :price=>11.23, :quantity=>1, :COFF=>-11.23}}), register.basket.sheet
   end
 end
